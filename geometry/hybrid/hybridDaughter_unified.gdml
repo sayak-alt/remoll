@@ -517,6 +517,31 @@
         dz="50" lunit="mm"/>
         
         
+	          <!--    Holes for Collimator 6A -->       
+  <tube name="Tube_1" rmin="0.71/2.0-0.001" rmax="0.71/2.0" z="1.56" deltaphi="2.0*3.1415927" startphi="0" aunit="rad" lunit="cm"/>
+  <tube name="Tube_2" rmin="0.71/2.0" rmax="1.11/2.0-0.1" z="0.20" deltaphi="2.0*3.1415927" startphi="0" aunit="rad" lunit="cm"/>  
+  <tube name="Tube_3" rmin="1.11/2.0-0.1+0.0001" rmax="1.11/2.0-0.1+0.0002" z="2.75" deltaphi="2.0*3.1415927" startphi="0" aunit="rad" lunit="cm"/> 
+  
+  <union name="union_tube_1_tube_2">
+    <first ref="Tube_1"/>
+    <second ref="Tube_2"/>
+    <position name="union_tube_1_tube_2_pos1" unit="cm" x="0" y="0" z="1.56/2.0+0.20/2.0" />
+  </union>
+  
+    
+  <union name="union_tube_1_tube_2_tube_3">
+    <first ref="union_tube_1_tube_2"/>
+    <second ref="Tube_3"/>
+    <position name="union_tube_1_tube_2_pos2" unit="cm" x="0" y="0" z="1.56/2.0+0.20/2.0+2.75/2.0" />
+  </union>
+  
+  
+  <union name="two_tubes_separated">
+    <first ref="union_tube_1_tube_2_tube_3"/>
+    <second ref="union_tube_1_tube_2_tube_3"/>
+    <position name="two_tubes_separated_pos1" unit="cm" x="4.445" y="0" z="0" />
+  </union>
+ 
         <!--    Solid for Collimator 6A -->
         <xtru name="Coll6A_solid1" lunit="mm">
             <twoDimVertex x="49.836" y="-7.792"/>
@@ -537,6 +562,13 @@
             <first ref="Coll6A_solid1"/>
             <second ref="Coll6A_Cylinder_solid1"/>
             <position name="Coll6A_Sub_pos1" unit="mm" x="0" y="0" z="69.850/2" />
+        </subtraction>
+	     <!--    Making holes in Collimator 6A -->
+  	<subtraction name="sub_coll6A_solid_1">
+            <first ref="Coll6A_solid_1"/>
+            <second ref="two_tubes_separated"/>
+            <position name="Coll6A_Sub_pos_1" unit="mm" x="91.821-4.620-2.37/2.0" y="-35.113+8.1/2.0" z="0+12.7" />
+            <rotation name="rotation_1" y="(3.1415927/2.0)+3.1415927" />
         </subtraction>
         
         <xtru name="Coll6A_solid2" lunit="mm">
@@ -560,6 +592,13 @@
             <second ref="Coll6A_Cylinder_solid2"/>
             <position name="Coll6A_Sub_pos2" unit="mm" x="0" y="0" z="69.850/2" />
         </subtraction>
+	    	     <!--    Making holes in Collimator 6A -->
+	 <subtraction name="sub_coll6A_solid_2">
+            <first ref="Coll6A_solid_2"/>
+            <second ref="two_tubes_separated"/>
+            <position name="Coll6A_Sub_pos_2" unit="mm" x="91.821-4.620-2.37/2.0" y="+35.113-8.1/2.0" z="0+12.7" />
+            <rotation name="rotation_2" y="(3.1415927/2.0)+3.1415927" />
+         </subtraction>
         
         <!--    Solid for Collimator 6B -->
         <xtru name="Coll6B_solid1" lunit="mm">
@@ -1819,7 +1858,7 @@
         
         <volume name="Coll6A_logic1">
             <materialref ref="CW90"/>
-            <solidref ref="Coll6A_solid_1"/>
+            <solidref ref="sub_coll6A_solid_1"/>
             <auxiliary auxtype="Color" auxvalue="blue"/>
             <auxiliary auxtype="Alpha" auxvalue="0.5"/>
             <auxiliary auxtype="SensDet" auxvalue="coilDet"/>
@@ -1828,7 +1867,7 @@
         
         <volume name="Coll6A_logic2">
             <materialref ref="CW90"/>
-            <solidref ref="Coll6A_solid_2"/>
+            <solidref ref="sub_coll6A_solid_2"/>
             <auxiliary auxtype="Color" auxvalue="blue"/>
             <auxiliary auxtype="Alpha" auxvalue="0.5"/>
             <auxiliary auxtype="SensDet" auxvalue="coilDet"/>
